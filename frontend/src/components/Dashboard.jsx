@@ -10,40 +10,38 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
 
-  useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem("user");
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+useEffect(() => {
+  const user = localStorage.getItem("user");
+  if (!user) {
+    router.push("/registerform");
+    return;
+  }
 
-    setCurrentUser(JSON.parse(user));
-    fetchUsers();
-  }, [router]);
+  fetchUsers(JSON.parse(user));
+}, [router]);
+
 
  const fetchUsers = async (user) => {
    try {
      const token = localStorage.getItem("token");
 
-     const response = await axiosInstance.get(
-       `/api/users/similar`,
-       {
-         params: { city: user.city },
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       }
-     );
+     const response = await axiosInstance.get(`/api/users/similar`, {
+       params: { city: user.city },
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
 
      const filtered = response.data.filter((u) => u._id !== user.id);
      setUsers(filtered);
+     setCurrentUser(user); // <- set user here after successful fetch
    } catch (err) {
      setError(err.response?.data?.message || "Failed to fetch users");
    } finally {
      setLoading(false);
    }
  };
+
 
   if (loading) {
     return (
