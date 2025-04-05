@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/utils/axiosConfig";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -21,33 +22,28 @@ export default function Dashboard() {
     fetchUsers();
   }, [router]);
 
-  const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
+ const fetchUsers = async (user) => {
+   try {
+     const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `http://localhost:5000/api/users/similar?city=${user.city}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+     const response = await axiosInstance.get(
+       `/api/users/similar`,
+       {
+         params: { city: user.city },
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       }
+     );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const data = await response.json();
-      // Filter out the current user
-      setUsers(data.filter((u) => u._id !== user.id));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+     const filtered = response.data.filter((u) => u._id !== user.id);
+     setUsers(filtered);
+   } catch (err) {
+     setError(err.response?.data?.message || "Failed to fetch users");
+   } finally {
+     setLoading(false);
+   }
+ };
 
   if (loading) {
     return (

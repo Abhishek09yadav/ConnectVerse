@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/utils/axiosConfig";
 
 const HOBBIES = [
   "Reading",
@@ -45,35 +46,33 @@ export default function RegisterForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
+  try {
+    const response = await axiosInstance.post(
+      `/api/auth/register`,
+      formData,
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
       }
+    );
 
-      // Store token in localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+    const data = response.data;
 
-      // Redirect to dashboard
-      router.push("/dashboard");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+    // Store token in localStorage
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // Redirect to dashboard
+    router.push("/dashboard");
+  } catch (err) {
+    setError(err.response?.data?.message || "Registration failed");
+  }
+};
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
