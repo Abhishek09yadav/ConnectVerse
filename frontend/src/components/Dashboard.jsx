@@ -99,7 +99,12 @@ useEffect(() => {
                 </span>
                 <button
                   onClick={() => {
-                    /* Implement messaging functionality */
+                    const phone = user.phone || ""; // make sure 'phone' is available in user data
+                    const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect? 😊`;
+                    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
+                      message
+                    )}`;
+                    window.open(whatsappUrl, "_blank");
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
@@ -110,7 +115,7 @@ useEffect(() => {
           );
         })}
       </div>
-
+ 
       {users.length === 0 && (
         <div className="text-center text-gray-500 mt-8">
           No users found with similar hobbies in your city.

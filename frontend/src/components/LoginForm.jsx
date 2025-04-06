@@ -1,7 +1,10 @@
+"use client";
 import { useState } from "react";
-import { useRouter } from "next/router";
+
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/utils/axiosConfig";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -26,7 +29,7 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/auth/login", formData);
+      const response = await axiosInstance.post("/api/auth/login", formData);
 
       // Store user data and token
       localStorage.setItem("token", response.data.token);
@@ -93,7 +96,7 @@ export default function LoginForm() {
       <div className="mt-4 text-center text-sm">
         <p>
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-blue-600 hover:text-blue-800">
+          <Link href="/registerform" className="text-blue-600 hover:text-blue-800">
             Register here
           </Link>
         </p>

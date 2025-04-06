@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosConfig";
+import Link from "next/link";
 
 const HOBBIES = [
   "Reading",
@@ -165,6 +166,16 @@ const handleSubmit = async (e) => {
           Register
         </button>
       </form>
+      <p className="mt-4 text-sm text-center text-gray-700">
+        Already a user?{" "}
+        <button
+          type="button"
+          onClick={() => router.push("/login")}
+          className="mt-4 w-full text-sm text-blue-600 hover:underline cursor-pointer"
+        >
+          Already a user? Login here
+        </button>
+      </p>
     </div>
   );
 }
