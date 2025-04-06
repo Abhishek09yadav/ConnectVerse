@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosConfig";
+import Logout from "./logout";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -63,8 +64,10 @@ useEffect(() => {
     <div className="max-w-4xl mx-auto mt-8 p-6">
       <h1 className="text-3xl font-bold mb-6">
         Find Hobby Buddies in {currentUser?.city}
+        <Logout />
       </h1>
 
+        
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => {
           // Find common hobbies
