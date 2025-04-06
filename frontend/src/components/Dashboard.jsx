@@ -34,6 +34,7 @@ useEffect(() => {
      });
 
      const filtered = response.data.filter((u) => u._id !== user.id);
+     console.log("Filtered Users:", filtered); // Debugging line
      setUsers(filtered);
      setCurrentUser(user); // <- set user here after successful fetch
    } catch (err) {
@@ -101,7 +102,7 @@ useEffect(() => {
                   onClick={() => {
                     const phone = user.phone || ""; // make sure 'phone' is available in user data
                     const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect? 😊`;
-                    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
+                    const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(
                       message
                     )}`;
                     window.open(whatsappUrl, "_blank");

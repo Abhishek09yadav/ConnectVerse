@@ -6,7 +6,7 @@ const User = require("../models/User");
 // Register new user
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, city, hobbies } = req.body;
+    const { name, email, password, city, hobbies,phone } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -21,6 +21,7 @@ router.post("/register", async (req, res) => {
       password,
       city,
       hobbies,
+      phone
     });
 
     await user.save();
