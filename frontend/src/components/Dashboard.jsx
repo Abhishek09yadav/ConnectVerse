@@ -101,7 +101,7 @@ useEffect(() => {
                 <button
                   onClick={() => {
                     const phone = user.phone || ""; // make sure 'phone' is available in user data
-                    const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect? 😊`;
+                    const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect?`;
                     const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(
                       message
                     )}`;
