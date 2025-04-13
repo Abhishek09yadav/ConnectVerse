@@ -66,7 +66,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold">
           Find Hobby Buddies in {currentUser?.city}
         </h1>
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <Link
             href="/settings"
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
@@ -74,17 +74,18 @@ export default function Dashboard() {
             Settings
           </Link>
           <Logout />
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => {
           // Find common hobbies
-       const commonHobbies =
-         Array.isArray(currentUser?.hobbies) && Array.isArray(user.hobbies)
-           ? user.hobbies.filter((hobby) => currentUser.hobbies.includes(hobby))
-           : [];
-
+          const commonHobbies =
+            Array.isArray(currentUser?.hobbies) && Array.isArray(user.hobbies)
+              ? user.hobbies.filter((hobby) =>
+                  currentUser.hobbies.includes(hobby)
+                )
+              : [];
 
           return (
             <div key={user._id} className="bg-white p-6 rounded-lg shadow-md">
