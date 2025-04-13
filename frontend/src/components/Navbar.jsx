@@ -3,26 +3,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation"; // For handling redirects
+import Logout from "./logout";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter(); // Initialize router
- const handleLogout = () => {
-   localStorage.removeItem("findhobby-token"); // Example for clearing auth token
-
-   router.push("/login"); // Redirecting to login page
- };
   const menuItems = [
     { label: "Home", href: "/" },
-    // { label: "About", href: "/about" },
-    // { label: "Services", href: "/services" },
-    // { label: "Projects", href: "/projects" },
     { label: "Settings", href: "/settings" },
-    { label: "Logout", href: "#", onClick: handleLogout }, 
+    { label: <Logout />, href: "#" },
   ];
-
-  // Function to handle logout
- 
 
   return (
     <nav className="bg-white shadow-md">
@@ -38,7 +28,7 @@ const Navbar = () => {
         <ul
           className={`md:flex space-x-6 ${
             open ? "block" : "hidden"
-          } md:block absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent px-6 md:px-0`}
+          } md:block absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent px-6 md:px-0 flex justify-center items-center`}
         >
           {menuItems.map((item) => (
             <li key={item.href} className="py-2 md:py-0">
