@@ -65,8 +65,8 @@ const handleSubmit = async (e) => {
     const data = response.data;
 
     // Store token in localStorage
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("findhobby-token", token);
+    // localStorage.setItem("user", JSON.stringify(data.user));
 
     // Redirect to dashboard
     router.push("/dashboard");

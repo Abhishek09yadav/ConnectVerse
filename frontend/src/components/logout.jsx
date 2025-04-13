@@ -8,8 +8,8 @@ const Logout = () => {
   const router = useRouter()
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
+   
+    localStorage.removeItem("findhobby-token")
     router.push("/login")
 }
 

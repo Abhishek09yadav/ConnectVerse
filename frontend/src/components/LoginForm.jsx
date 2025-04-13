@@ -32,7 +32,7 @@ export default function LoginForm() {
       const response = await axiosInstance.post("/api/auth/login", formData);
 
       // Store user data and token
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("findhobby-token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       // Redirect to dashboard

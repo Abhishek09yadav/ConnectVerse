@@ -21,22 +21,35 @@ export default function Settings() {
   const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      router.push("/registerform");
-      return;
-    }
-    const parsedUser = JSON.parse(storedUser);
-    setUser(parsedUser);
-    setFormData({
-      name: parsedUser.name,
-      email: parsedUser.email,
-      phone: parsedUser.phone,
-      city: parsedUser.city,
-      hobbies: parsedUser.hobbies.join(", "),
-    });
-    setLoading(false);
-  }, [router]);
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("findhobby-token");
+        const response = await axiosInstance.get("/api/users/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const userData = response.data;
+        console.log("userData", userData);
+        setUser(userData);
+        setFormData({
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone,
+          city: userData.city,
+          hobbies: userData.hobbies.join(", "),
+        });
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError("Failed to load user data");
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +77,7 @@ export default function Settings() {
     setSuccess("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("findhobby-token");
       const formDataToSend = new FormData();
 
       // Add profile image if selected
@@ -88,8 +101,8 @@ export default function Settings() {
         }
       );
 
-      // Update local storage with new user data
-      localStorage.setItem("user", JSON.stringify(response.data));
+      // Update state with new user data
+      setUser(response.data);
       setSuccess("Profile updated successfully!");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update profile");
@@ -127,7 +140,7 @@ export default function Settings() {
           <div className="flex-shrink-0">
             <img
               className="h-24 w-24 rounded-full object-cover"
-              src={imagePreview || user?.profileImage || "/default-avatar.png"}
+              src={user?.profileImage || "/default-avatar.png"}
               alt="Profile"
             />
           </div>

@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const user = localStorage.getItem("token");
+    const user = localStorage.getItem("findhobby-token");
     if (user) {
       router.push("/dashboard");
     } else {

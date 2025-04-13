@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Add authorization token to headers if available
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("findhobby-token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     // Handle 401 Unauthorized errors (token expired or invalid)
     if (error.response && error.response.status === 401) {
       // Clear local storage
-      localStorage.removeItem("token");
+      localStorage.removeItem("findhobby-token");
       localStorage.removeItem("user");
 
       // Redirect to login if not already there

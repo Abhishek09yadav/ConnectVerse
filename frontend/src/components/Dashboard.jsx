@@ -13,18 +13,18 @@ export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem("findhobby-token");
+    console.log("user", user);
     if (!user) {
       router.push("/registerform");
       return;
     }
-
-    fetchUsers(JSON.parse(user));
-  }, [router]);
+    fetchUsers(user);
+  }, []);
 
   const fetchUsers = async (user) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("findhobby-token");
 
       const response = await axiosInstance.get(`/api/users/similar`, {
         params: { city: user.city },
@@ -80,9 +80,11 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => {
           // Find common hobbies
-          const commonHobbies = user.hobbies.filter((hobby) =>
-            currentUser?.hobbies.includes(hobby)
-          );
+       const commonHobbies =
+         Array.isArray(currentUser?.hobbies) && Array.isArray(user.hobbies)
+           ? user.hobbies.filter((hobby) => currentUser.hobbies.includes(hobby))
+           : [];
+
 
           return (
             <div key={user._id} className="bg-white p-6 rounded-lg shadow-md">
