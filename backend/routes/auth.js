@@ -6,7 +6,7 @@ const User = require("../models/User");
 // Register new user
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, city, hobbies,phone } = req.body;
+    const { name, email, password, city, hobbies, phone } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -21,7 +21,7 @@ router.post("/register", async (req, res) => {
       password,
       city,
       hobbies,
-      phone
+      phone,
     });
 
     await user.save();
@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || "your-secret-key",
+      process.env.JWT_SECRET || "your-secret-key"
     );
 
     res.json({
@@ -83,6 +83,40 @@ router.post("/login", async (req, res) => {
         email: user.email,
         city: user.city,
         hobbies: user.hobbies,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Get user details
+router.get("/user", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "your-secret-key"
+    );
+    const user = await User.findById(decoded.userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        city: user.city,
+        hobbies: user.hobbies,
+        phone: user.phone,
+        profileImage: user.profileImage,
       },
     });
   } catch (error) {

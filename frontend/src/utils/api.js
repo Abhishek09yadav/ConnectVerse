@@ -36,3 +36,16 @@ export const getSimilarUsers = async (city) => {
   });
   return response.data;
 };
+
+export const getCurrentUser = async () => {
+  const token = localStorage.getItem("findhobby-token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const response = await axiosInstance.get("/api/auth/user", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

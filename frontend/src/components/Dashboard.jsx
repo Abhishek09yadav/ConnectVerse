@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSimilarUsers } from "@/utils/api";
+import { getSimilarUsers, getCurrentUser } from "@/utils/api";
 import Logout from "./logout";
 import Link from "next/link";
 
@@ -13,25 +13,23 @@ export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("findhobby-token");
-    // console.log("user", user);
-    if (!user) {
+    const token = localStorage.getItem("findhobby-token");
+    if (!token) {
       router.push("/registerform");
       return;
     }
-    fetchUsers(user);
+    fetchUserAndSimilarUsers(token);
   }, []);
 
-  const fetchUsers = async (user) => {
+  const fetchUserAndSimilarUsers = async (token) => {
     try {
-      const similarUsers = await getSimilarUsers(user.city);
-      console.log("users", similarUsers);
-      const filtered = similarUsers.filter((u) => u._id !== user.id);
-      console.log("Filtered Users:", filtered);
+      const userData = await getCurrentUser();
+      setCurrentUser(userData.user);
+      const similarUsers = await getSimilarUsers(userData.user.city);
+      const filtered = similarUsers.filter((u) => u._id !== userData.user.id);
       setUsers(filtered);
-      setCurrentUser(user);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch users");
+      setError(err.response?.data?.message || "Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -58,9 +56,7 @@ export default function Dashboard() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           Find Hobby Buddies in {currentUser?.city}
-          
         </h1>
-       
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
