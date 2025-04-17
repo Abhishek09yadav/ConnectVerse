@@ -2,9 +2,8 @@
 import { useState } from "react";
 
 import Link from "next/link";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosConfig";
+import { login } from "@/utils/api";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -29,11 +28,11 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post("/api/auth/login", formData);
+      const data = await login(formData);
 
       // Store user data and token
-      localStorage.setItem("findhobby-token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("findhobby-token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       // Redirect to dashboard
       router.push("/dashboard");
@@ -96,7 +95,10 @@ export default function LoginForm() {
       <div className="mt-4 text-center text-sm">
         <p>
           Don&apos;t have an account?{" "}
-          <Link href="/registerform" className="text-blue-600 hover:text-blue-800">
+          <Link
+            href="/registerform"
+            className="text-blue-600 hover:text-blue-800"
+          >
             Register here
           </Link>
         </p>

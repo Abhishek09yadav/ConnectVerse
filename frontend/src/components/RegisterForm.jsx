@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosConfig";
+import { register } from "@/utils/api";
 import Link from "next/link";
 
 const HOBBIES = [
@@ -47,33 +47,23 @@ export default function RegisterForm() {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  try {
-    const response = await axiosInstance.post(
-      `/api/auth/register`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+      const data = await register(formData);
 
-    const data = response.data;
+      // Store token in localStorage
+      localStorage.setItem("findhobby-token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-    // Store token in localStorage
-    localStorage.setItem("findhobby-token", token);
-    // localStorage.setItem("user", JSON.stringify(data.user));
-
-    // Redirect to dashboard
-    router.push("/dashboard");
-  } catch (err) {
-    setError(err.response?.data?.message || "Registration failed");
-  }
-};
+      // Redirect to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">

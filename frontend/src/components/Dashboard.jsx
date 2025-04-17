@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosConfig";
+import { getSimilarUsers } from "@/utils/api";
 import Logout from "./logout";
 import Link from "next/link";
 
@@ -14,7 +14,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const user = localStorage.getItem("findhobby-token");
-    console.log("user", user);
+    // console.log("user", user);
     if (!user) {
       router.push("/registerform");
       return;
@@ -24,19 +24,12 @@ export default function Dashboard() {
 
   const fetchUsers = async (user) => {
     try {
-      const token = localStorage.getItem("findhobby-token");
-
-      const response = await axiosInstance.get(`/api/users/similar`, {
-        params: { city: user.city },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const filtered = response.data.filter((u) => u._id !== user.id);
-      console.log("Filtered Users:", filtered); // Debugging line
+      const similarUsers = await getSimilarUsers(user.city);
+      console.log("users", similarUsers);
+      const filtered = similarUsers.filter((u) => u._id !== user.id);
+      console.log("Filtered Users:", filtered);
       setUsers(filtered);
-      setCurrentUser(user); // <- set user here after successful fetch
+      setCurrentUser(user);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch users");
     } finally {
@@ -65,16 +58,9 @@ export default function Dashboard() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           Find Hobby Buddies in {currentUser?.city}
+          
         </h1>
-        {/* <div className="flex items-center space-x-4">
-          <Link
-            href="/settings"
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-          >
-            Settings
-          </Link>
-          <Logout />
-        </div> */}
+       
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

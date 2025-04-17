@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosConfig";
+import { getUserProfile, updateUserProfile } from "@/utils/api";
 import Logout from "./logout";
 
 export default function Settings() {
@@ -23,15 +23,7 @@ export default function Settings() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("findhobby-token");
-        const response = await axiosInstance.get("/api/users/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const userData = response.data;
-        console.log("userData", userData);
+        const userData = await getUserProfile();
         setUser(userData);
         setFormData({
           name: userData.name,
@@ -77,7 +69,6 @@ export default function Settings() {
     setSuccess("");
 
     try {
-      const token = localStorage.getItem("findhobby-token");
       const formDataToSend = new FormData();
 
       // Add profile image if selected
@@ -90,19 +81,8 @@ export default function Settings() {
         formDataToSend.append(key, formData[key]);
       });
 
-      const response = await axiosInstance.put(
-        "/api/users/profile",
-        formDataToSend,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      // Update state with new user data
-      setUser(response.data);
+      const updatedUser = await updateUserProfile(formDataToSend);
+      setUser(updatedUser);
       setSuccess("Profile updated successfully!");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update profile");
@@ -119,8 +99,6 @@ export default function Settings() {
 
   return (
     <div className="max-w-2xl mx-auto mt-8 p-6">
-     
-
       {error && (
         <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">
           {error}
