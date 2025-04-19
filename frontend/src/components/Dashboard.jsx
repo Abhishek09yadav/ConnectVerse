@@ -3,9 +3,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getSimilarUsers, getCurrentUser } from "@/utils/api";
 
-import { FaUserFriends, FaMapMarkerAlt, FaPaintBrush, FaWhatsapp } from "react-icons/fa";
-
+import {
+  FaUserFriends,
+  FaMapMarkerAlt,
+  FaPaintBrush,
+  FaWhatsapp,
+  FaUser,
+} from "react-icons/fa";
 import { HiOutlineExclamationCircle, HiOutlineUsers } from "react-icons/hi";
+import UserProfileModal from "./UserProfileModal";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -13,6 +19,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("findhobby-token");
@@ -62,7 +69,7 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="mb-4 md:mb-0">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-              Find Hobby Buddies in   {currentUser?.city}
+              Find Hobby Buddies in {currentUser?.city}
             </h1>
             {/* <div className="flex items-center text-gray-600">
               <FaMapMarkerAlt className="mr-2" />
@@ -126,20 +133,29 @@ export default function Dashboard() {
                     <span className="text-sm text-gray-500">
                       {commonHobbies.length} matching hobbies
                     </span>
-                    <button
-                      onClick={() => {
-                        const phone = user.phone || "";
-                        const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect?`;
-                        const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(
-                          message
-                        )}`;
-                        window.open(whatsappUrl, "_blank");
-                      }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
-                    >
-                      <FaWhatsapp className="w-4 h-4" />
-                      <span>Message</span>
-                    </button>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setSelectedUser(user)}
+                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2"
+                      >
+                        <FaUser className="w-4 h-4" />
+                        <span>View Profile</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          const phone = user.phone || "";
+                          const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect?`;
+                          const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(
+                            message
+                          )}`;
+                          window.open(whatsappUrl, "_blank");
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+                      >
+                        <FaWhatsapp className="w-4 h-4" />
+                        <span>Message</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -162,6 +178,13 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {selectedUser && (
+        <UserProfileModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </div>
   );
 }
