@@ -1,7 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSimilarUsers, getCurrentUser } from "@/utils/api";
+import {
+  getSimilarUsers,
+  getCurrentUser,
+  sendFriendRequest,
+} from "@/utils/api";
+import Link from "next/link";
 
 import {
   FaUserFriends,
@@ -9,9 +14,11 @@ import {
   FaPaintBrush,
   FaWhatsapp,
   FaUser,
+  FaUserPlus,
 } from "react-icons/fa";
 import { HiOutlineExclamationCircle, HiOutlineUsers } from "react-icons/hi";
 import UserProfileModal from "./UserProfileModal";
+
 
 export default function Dashboard() {
   const router = useRouter();
@@ -20,6 +27,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showFriendsManager, setShowFriendsManager] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("findhobby-token");
@@ -41,6 +49,16 @@ export default function Dashboard() {
       setError(err.response?.data?.message || "Failed to fetch data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSendFriendRequest = async (userId) => {
+    try {
+      await sendFriendRequest(userId);
+      // Refresh the data
+      fetchUserAndSimilarUsers(localStorage.getItem("findhobby-token"));
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to send friend request");
     }
   };
 
@@ -71,11 +89,14 @@ export default function Dashboard() {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
               Find Hobby Buddies in {currentUser?.city}
             </h1>
-            {/* <div className="flex items-center text-gray-600">
-              <FaMapMarkerAlt className="mr-2" />
-              <span className="text-lg">{currentUser?.city}</span>
-            </div> */}
           </div>
+          <Link
+            href="/friends"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+          >
+            <FaUserFriends className="w-4 h-4" />
+            <span>Friends</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -135,25 +156,11 @@ export default function Dashboard() {
                     </span>
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => setSelectedUser(user)}
-                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2"
-                      >
-                        <FaUser className="w-4 h-4" />
-                        <span>View Profile</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          const phone = user.phone || "";
-                          const message = `Hi ${user.name}, I saw we share some hobbies! Want to connect?`;
-                          const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(
-                            message
-                          )}`;
-                          window.open(whatsappUrl, "_blank");
-                        }}
+                        onClick={() => handleSendFriendRequest(user._id)}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
                       >
-                        <FaWhatsapp className="w-4 h-4" />
-                        <span>Message</span>
+                        <FaUserPlus className="w-4 h-4" />
+                        <span>Add Friend</span>
                       </button>
                     </div>
                   </div>

@@ -49,3 +49,29 @@ export const getCurrentUser = async () => {
   });
   return response.data;
 };
+
+// Friend request API calls
+export const sendFriendRequest = async (userId) => {
+  const response = await axiosInstance.post(
+    `/api/users/friend-request/${userId}`
+  );
+  return response.data;
+};
+
+export const respondToFriendRequest = async (requestId, action) => {
+  const response = await axiosInstance.post(
+    `/api/users/friend-request/${requestId}/respond`,
+    { action }
+  );
+  return response.data;
+};
+
+export const getFriendRequests = async () => {
+  const response = await axiosInstance.get("/api/users/friend-requests");
+  return response.data;
+};
+
+export const getFriends = async () => {
+  const response = await axiosInstance.get("/api/users/friends");
+  return response.data;
+};

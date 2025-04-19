@@ -103,4 +103,107 @@ router.put(
   }
 );
 
+// Send friend request
+router.post("/friend-request/:userId", auth, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const currentUser = await User.findById(req.user.userId);
+    const targetUser = await User.findById(userId);
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if already friends
+    if (currentUser.friends.includes(userId)) {
+      return res.status(400).json({ message: "Already friends" });
+    }
+
+    // Check if request already exists
+    const existingRequest = targetUser.friendRequests.find(
+      (request) =>
+        request.from.toString() === currentUser._id.toString() &&
+        request.status === "pending"
+    );
+
+    if (existingRequest) {
+      return res.status(400).json({ message: "Friend request already sent" });
+    }
+
+    // Add friend request
+    targetUser.friendRequests.push({
+      from: currentUser._id,
+      status: "pending",
+    });
+
+    await targetUser.save();
+    res.json({ message: "Friend request sent successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Respond to friend request
+router.post("/friend-request/:requestId/respond", auth, async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { action } = req.body; // 'accept' or 'reject'
+    const currentUser = await User.findById(req.user.userId);
+
+    // Find the friend request
+    const request = currentUser.friendRequests.id(requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Friend request not found" });
+    }
+
+    if (action === "accept") {
+      // Add to friends list for both users
+      currentUser.friends.push(request.from);
+      const sender = await User.findById(request.from);
+      sender.friends.push(currentUser._id);
+      await sender.save();
+    }
+
+    // Update request status
+    request.status = action === "accept" ? "accepted" : "rejected";
+    await currentUser.save();
+
+    res.json({ message: `Friend request ${action}ed successfully` });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Get friend requests
+router.get("/friend-requests", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).populate(
+      "friendRequests.from",
+      "name email profileImage"
+    );
+
+    const pendingRequests = user.friendRequests.filter(
+      (request) => request.status === "pending"
+    );
+
+    res.json(pendingRequests);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Get friends list
+router.get("/friends", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).populate(
+      "friends",
+      "name email profileImage hobbies city"
+    );
+
+    res.json(user.friends);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = router;
