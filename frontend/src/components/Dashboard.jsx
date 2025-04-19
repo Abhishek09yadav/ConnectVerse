@@ -89,7 +89,7 @@ export default function Dashboard() {
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="relative">
                       <img
-                        src={user.profileImage || "/default-avatar.png"}
+                        src={user.profileImage || "/profile.png"}
                         alt={user.name}
                         className="h-16 w-16 rounded-full object-cover ring-4 ring-blue-100"
                       />
