@@ -115,7 +115,7 @@ export default function Settings() {
           <div className="flex-shrink-0">
             <img
               className="h-24 w-24 rounded-full object-cover"
-              src={user?.profileImage || "/default-avatar.png"}
+              src={imagePreview || user?.profileImage || "/default-avatar.png"}
               alt="Profile"
             />
           </div>
