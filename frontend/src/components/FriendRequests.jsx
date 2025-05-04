@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { FaUserFriends, FaUserCheck, FaUserTimes } from "react-icons/fa";
 import { getFriendRequests, respondToFriendRequest } from "@/utils/api";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 export default function FriendRequests() {
   const [friendRequests, setFriendRequests] = useState([]);
@@ -33,6 +35,23 @@ export default function FriendRequests() {
     } catch (err) {
       setError(err.response?.data?.message || "Failed to process request");
     }
+  };
+
+  const handleRespondWithConfirm = (requestId, action) => {
+    confirmAlert({
+      title: `${action === "accept" ? "Accept" : "Reject"} Friend Request`,
+      message: `Are you sure you want to ${action} this friend request?`,
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleRespond(requestId, action),
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
   };
 
   if (loading) {
@@ -69,14 +88,18 @@ export default function FriendRequests() {
               </div>
               <div className="flex justify-end space-x-2">
                 <button
-                  onClick={() => handleRespond(request._id, "accept")}
+                  onClick={() =>
+                    handleRespondWithConfirm(request._id, "accept")
+                  }
                   className="flex items-center gap-2 px-4 py-2 bg-[#74B9FF] text-white rounded-lg hover:bg-[#0A79DF] transition duration-200 shadow-md"
                 >
                   <FaUserCheck className="w-4 h-4" />
                   <span>Accept</span>
                 </button>
                 <button
-                  onClick={() => handleRespond(request._id, "reject")}
+                  onClick={() =>
+                    handleRespondWithConfirm(request._id, "reject")
+                  }
                   className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200 shadow-md"
                 >
                   <FaUserTimes className="w-4 h-4" />
