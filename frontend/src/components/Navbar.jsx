@@ -1,13 +1,32 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Home, Users, UserPlus, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation"; // For handling redirects
 import Logout from "./logout";
+import { getFriendRequests } from "@/utils/api";
+import NotificationDot from "./NotificationDot";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [hasFriendRequests, setHasFriendRequests] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchFriendRequests = async () => {
+      try {
+        const requests = await getFriendRequests();
+        setHasFriendRequests(requests.length > 0);
+      } catch (error) {
+        console.error("Failed to fetch friend requests:", error);
+      }
+    };
+
+    fetchFriendRequests();
+    // Poll for new friend requests every 30 seconds
+    const interval = setInterval(fetchFriendRequests, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const menuItems = [
     { label: "Home", href: "/", icon: <Home size={18} className="mr-2" /> },
@@ -17,7 +36,12 @@ const Navbar = () => {
       icon: <Users size={18} className="mr-2" />,
     },
     {
-      label: "Friend Requests",
+      label: (
+        <div className="relative">
+          <div>Friend Requests</div>
+          <NotificationDot show={hasFriendRequests} />
+        </div>
+      ),
       href: "/friendRequests",
       icon: <UserPlus size={18} className="mr-2" />,
     },
@@ -29,7 +53,7 @@ const Navbar = () => {
     {
       label: <Logout />,
       href: "#",
-      icon:'',
+      icon: "",
     },
   ];
 
