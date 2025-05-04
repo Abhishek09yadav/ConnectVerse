@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { HiOutlineExclamationCircle, HiOutlineUsers } from "react-icons/hi";
 import UserProfileModal from "./UserProfileModal";
+import toast from "react-hot-toast";
 
 
 export default function Dashboard() {
@@ -71,14 +72,15 @@ export default function Dashboard() {
   }
 
   if (error) {
-    return (
-      <div className="max-w-4xl mx-auto mt-8 p-6 bg-red-50 text-red-700 rounded-xl shadow-lg">
-        <div className="flex items-center space-x-3">
-          <HiOutlineExclamationCircle className="w-6 h-6" />
-          <span>{error}</span>
-        </div>
-      </div>
-    );
+    // return (
+    //   <div className="max-w-4xl mx-auto mt-8 p-6 bg-red-50 text-red-700 rounded-xl shadow-lg">
+    //     <div className="flex items-center space-x-3">
+    //       <HiOutlineExclamationCircle className="w-6 h-6" />
+    //       <span>{error}</span>
+    //     </div>
+    //   </div>
+    // );
+    toast.error(error);
   }
 
   return (

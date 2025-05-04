@@ -70,14 +70,14 @@ export default function FriendRequests() {
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => handleRespond(request._id, "accept")}
-                  className="btn-green"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#74B9FF] text-white rounded-lg hover:bg-[#0A79DF] transition duration-200 shadow-md"
                 >
                   <FaUserCheck className="w-4 h-4" />
                   <span>Accept</span>
                 </button>
                 <button
                   onClick={() => handleRespond(request._id, "reject")}
-                  className="btn-red"
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200 shadow-md"
                 >
                   <FaUserTimes className="w-4 h-4" />
                   <span>Reject</span>
