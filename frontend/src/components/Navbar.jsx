@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"; // For handling redirects
 import Logout from "./logout";
 import { getFriendRequests } from "@/utils/api";
 import NotificationDot from "./NotificationDot";
+import Image from "next/image";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -60,8 +61,17 @@ const Navbar = () => {
   return (
     <nav className="bg-white/30 backdrop-blur-lg shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href="/dashboard" className="text-2xl font-bold text-blue-600">
-          FindHobby
+        <Link href="/dashboard" className="flex items-center space-x-2">
+          <Image
+            src="/logo.png"
+            className="mix-blend-color-burn rounded-md w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
+            alt="Logo"
+            width={100}
+            height={100}
+          />
+          <span className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
+            ConnectVerse
+          </span>
         </Link>
 
         <div className="md:hidden" onClick={() => setOpen(!open)}>
