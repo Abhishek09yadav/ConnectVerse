@@ -1,74 +1,79 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-    // unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  hobbies: [
-    {
+const userSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
-  ],
-  profileImage: {
-    type: String,
-    default: "",
-  },
-  friends: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
-  ],
-  friendRequests: [
-    {
-      from: {
+    phone: {
+      type: String,
+      required: true,
+      // unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    hobbies: [
+      {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    ],
+    profileImage: {
+      type: String,
+      default: "",
+    },
+    friends: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      status: {
-        type: String,
-        enum: ["pending", "accepted", "rejected"],
-        default: "pending",
+    ],
+    friendRequests: [
+      {
+        from: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        status: {
+          type: String,
+          enum: ["pending", "accepted", "rejected"],
+          default: "pending",
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-  ],
-  createdAt: {
-    type: Date,
-    default: Date.now,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
   },
-});
+  { timestamps: true }
+);
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {

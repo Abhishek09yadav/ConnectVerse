@@ -75,3 +75,18 @@ export const getFriends = async () => {
   const response = await axiosInstance.get("/api/users/friends");
   return response.data;
 };
+
+export const requestPasswordReset = async (email) => {
+  const response = await axiosInstance.post("/api/auth/forgot-password", {
+    email,
+  });
+  return response.data;
+};
+
+export const resetPassword = async (token, newPassword) => {
+  const response = await axiosInstance.post("/api/auth/reset-password", {
+    token,
+    newPassword,
+  });
+  return response.data;
+};
