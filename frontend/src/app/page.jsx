@@ -7,8 +7,12 @@ export default function Home() {
   const pathname = usePathname();
 
   useEffect(() => {
-     if (pathname === "/forgot-password" || pathname === "/registerform")
-       return;
+    if (
+      pathname === "/forgot-password" ||
+      pathname === "/registerform" ||
+      pathname === "/reset-password"
+    )
+      return;
     const user = localStorage.getItem("findhobby-token");
     if (user) {
       router.push("/dashboard");
