@@ -238,9 +238,8 @@ router.post("/reset-password", async (req, res) => {
       });
     }
 
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    // Set new password - the pre-save middleware will handle hashing
+    user.password = newPassword;
 
     // Clear reset token fields
     user.resetPasswordToken = undefined;
