@@ -86,7 +86,7 @@ export default function ResetPasswordForm() {
             type="password"
             name="password"
             required
-            minLength="6"
+            minLength="3"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             value={formData.password}
             onChange={handleChange}
@@ -101,7 +101,7 @@ export default function ResetPasswordForm() {
             type="password"
             name="confirmPassword"
             required
-            minLength="6"
+            minLength="3"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             value={formData.confirmPassword}
             onChange={handleChange}
