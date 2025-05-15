@@ -36,7 +36,8 @@ axiosInstance.interceptors.response.use(
       // Redirect to login if not already there
       if (
         typeof window !== "undefined" &&
-        !window.location.pathname.includes("/login")
+        !window.location.pathname.includes("/login") &&
+        !window.location.pathname.includes("/reset-password")
       ) {
         window.location.href = "/login";
       }
