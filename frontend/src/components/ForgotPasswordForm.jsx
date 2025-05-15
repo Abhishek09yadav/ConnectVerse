@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { requestPasswordReset } from "@/utils/api";
+import axios from "axios";
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
@@ -17,7 +17,12 @@ export default function ForgotPasswordForm() {
     setLoading(true);
 
     try {
-      await requestPasswordReset(email);
+      const response = await axios.post(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+        }/api/auth/forgot-password`,
+        { email }
+      );
       setSuccess("Password reset instructions have been sent to your email.");
     } catch (error) {
       setError(
