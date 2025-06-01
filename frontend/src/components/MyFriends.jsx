@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { FaUserFriends, FaUser } from "react-icons/fa";
 import { getFriends } from "@/utils/api";
 import UserProfileModal from "@/components/UserProfileModal";
+import { useRouter } from "next/navigation";
 
 export default function MyFriends() {
   const [friends, setFriends] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const router = useRouter();
   useEffect(() => {
     fetchFriends();
   }, []);
@@ -81,18 +82,18 @@ export default function MyFriends() {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setSelectedUser(friend)}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition cursor-pointer"
                   >
                     <FaUser className="w-4 h-4" />
                     View
                   </button>
                   <button
                     onClick={() =>
-                      window.open(`https://wa.me/91${friend.phone}`, "_blank")
+                      router.push(`/chatScreen/${friend._id}`)
                     }
-                    className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition cursor-pointer"
                   >
-                    <FaUserFriends className="w-4 h-4" />
+                    <FaUserFriends className="w-4 h-4 " />
                     Message
                   </button>
                 </div>
