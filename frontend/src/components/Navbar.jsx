@@ -1,116 +1,205 @@
 "use client";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { Menu, X, Home, Users, UserPlus, Settings, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation"; // For handling redirects
-import Logout from "./logout";
-import { getFriendRequests } from "@/utils/api";
-import NotificationDot from "./NotificationDot";
+import React, { useState, useEffect } from "react";
+import {
+  Menu,
+  X,
+  Home,
+  Users,
+  UserPlus,
+  Settings,
+  LogOut,
+  Bell,
+} from "lucide-react";
+import { useRouter } from "next/navigation"; // ✅ Import router
 import Image from "next/image";
 
+const NotificationDot = ({ show }) =>
+  show ? (
+    <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+  ) : null;
+
+const Logout = () => (
+  <span className="flex items-center">
+    <LogOut size={18} className="mr-2" />
+    Logout
+  </span>
+);
+
 const Navbar = () => {
+  const router = useRouter(); // ✅ Initialize router
   const [open, setOpen] = useState(false);
-  const [hasFriendRequests, setHasFriendRequests] = useState(false);
-  const router = useRouter();
+  const [hasFriendRequests, setHasFriendRequests] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const fetchFriendRequests = async () => {
-      try {
-        const requests = await getFriendRequests();
-        setHasFriendRequests(requests.length > 0);
-      } catch (error) {
-        console.error("Failed to fetch friend requests:", error);
-      }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
     };
-
-    fetchFriendRequests();
-    // Poll for new friend requests every 30 seconds
-    const interval = setInterval(fetchFriendRequests, 30000);
-    return () => clearInterval(interval);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const menuItems = [
-    { label: "Home", href: "/", icon: <Home size={18} className="mr-2" /> },
+    {
+      label: "Home",
+      href: "/",
+      icon: <Home size={18} />,
+      gradient: "from-blue-400 to-purple-500",
+    },
     {
       label: "My Friends",
       href: "/myFriends",
-      icon: <Users size={18} className="mr-2" />,
+      icon: <Users size={18} />,
+      gradient: "from-green-400 to-blue-500",
     },
     {
-      label: (
-        <div className="relative">
-          <div>Friend Requests</div>
-          <NotificationDot show={hasFriendRequests} />
-        </div>
-      ),
+      label: "Friend Requests",
       href: "/friendRequests",
-      icon: <UserPlus size={18} className="mr-2" />,
+      icon: <UserPlus size={18} />,
+      gradient: "from-pink-400 to-red-500",
+      hasNotification: hasFriendRequests,
     },
     {
       label: "Settings",
       href: "/settings",
-      icon: <Settings size={18} className="mr-2" />,
-    },
-    {
-      label: <Logout />,
-      href: "#",
-      icon: "",
+      icon: <Settings size={18} />,
+      gradient: "from-gray-400 to-gray-600",
     },
   ];
 
-  return (
-    <nav className="bg-white/30 backdrop-blur-lg shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href="/dashboard" className="flex items-center space-x-2">
-          <Image
-            src="/logo.png"
-            className="mix-blend-color-burn rounded-md w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
-            alt="Logo"
-            width={100}
-            height={100}
-          />
-          <span className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
-            ConnectVerse
-          </span>
-        </Link>
+  const navigate = (href) => {
+    router.push(href);
+    setOpen(false);
+  };
 
-        <div className="md:hidden" onClick={() => setOpen(!open)}>
-          {open ? (
-            <X className="h-6 w-6 text-gray-800" />
-          ) : (
-            <Menu className="h-6 w-6 text-gray-800" />
-          )}
+  return (
+    <>
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20"
+            : "bg-white/60 backdrop-blur-lg shadow-md"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex items-center space-x-3 group cursor-pointer">
+              <div className="relative">
+                <div className="w-15 h-15 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <div className="w-12 h-12 bg-white rounded-md flex items-center justify-center">
+                    <Image src='/logo.png' width={100} height={100}/>
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  ConnectVerse
+                </h1>
+                <p className="text-xs text-gray-500 -mt-1">Social Network</p>
+              </div>
+            </div>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-2">
+              {menuItems.map((item, index) => (
+                <div key={index} className="relative group">
+                  <button
+                    onClick={() => navigate(item.href)}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden"
+                  >
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl`}
+                    ></div>
+                    <div className="relative z-10 flex items-center space-x-2">
+                      {item.icon}
+                      <span className="text-sm font-medium">{item.label}</span>
+                      {item.hasNotification && <NotificationDot show={true} />}
+                    </div>
+                  </button>
+                </div>
+              ))}
+              {/* Logout */}
+              <div className="relative group">
+                <button className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                  <div className="relative z-10">
+                    <Logout />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setOpen(!open)}
+              className="md:hidden relative w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-md"
+            >
+              <div className="relative w-5 h-5">
+                <Menu
+                  className={`absolute inset-0 text-gray-700 transition-all duration-300 ${
+                    open ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                  }`}
+                  size={20}
+                />
+                <X
+                  className={`absolute inset-0 text-gray-700 transition-all duration-300 ${
+                    open ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
+                  }`}
+                  size={20}
+                />
+              </div>
+            </button>
+          </div>
         </div>
 
-        <ul
-          className={`md:flex md:space-x-6 space-y-4 md:space-y-0 ${
-            open ? "block" : "hidden"
-          } md:block absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent px-6 md:px-0 py-4 md:py-0 shadow-md md:shadow-none`}
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden transition-all duration-300 ease-in-out ${
+            open ? "max-h-96 opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+          }`}
         >
-          {menuItems.map((item, index) => (
-            <li key={index} className="flex items-center py-2 md:py-0">
-              {item.href === "#" ? (
+          <div className="bg-white/90 backdrop-blur-xl border-t border-white/20 shadow-xl">
+            <div className="px-4 py-2 space-y-1">
+              {menuItems.map((item, index) => (
                 <button
-                  onClick={item.onClick}
-                  className="flex items-center text-gray-700 hover:text-blue-600 transition"
+                  key={index}
+                  onClick={() => navigate(item.href)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:text-white transition-all duration-300 relative group overflow-hidden"
                 >
-                  {item.icon}
-                  {item.label}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl`}
+                  ></div>
+                  <div className="relative z-10 flex items-center space-x-3 w-full">
+                    {item.icon}
+                    <span className="font-medium">{item.label}</span>
+                    {item.hasNotification && <NotificationDot show={true} />}
+                  </div>
                 </button>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="flex items-center text-gray-700 hover:text-blue-600 transition"
-                >
-                  {item.icon}
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
+              ))}
+              {/* Mobile Logout */}
+              <button
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 hover:text-white transition-all duration-300 relative group overflow-hidden"
+                onClick={() => setOpen(false)}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                <div className="relative z-10">
+                  <Logout />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 };
 
