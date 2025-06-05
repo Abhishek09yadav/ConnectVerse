@@ -18,19 +18,24 @@ const NotificationDot = ({ show }) =>
     <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
   ) : null;
 
-const Logout = () => (
-  <span className="flex items-center">
-    <LogOut size={18} className="mr-2" />
-    Logout
-  </span>
-);
+
+
 
 const Navbar = () => {
   const router = useRouter(); // ✅ Initialize router
   const [open, setOpen] = useState(false);
   const [hasFriendRequests, setHasFriendRequests] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-
+const Logout = () => (
+  <span onClick={handleLogout} className="flex items-center ">
+    <LogOut size={18} className="mr-2" />
+    Logout
+  </span>
+);
+  const handleLogout = () => {
+  localStorage.removeItem("findhobby-token");
+  router.push("/login");
+};
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -95,7 +100,7 @@ const Navbar = () => {
               <div className="relative">
                 <div className="w-15 h-15 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                   <div className="w-12 h-12 bg-white rounded-md flex items-center justify-center">
-                    <Image src='/logo.png' width={100} height={100}/>
+                    <Image src="/logo.png" width={100} height={100} />
                   </div>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"></div>
