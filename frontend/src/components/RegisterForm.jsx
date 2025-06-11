@@ -2,31 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/utils/api";
-import Link from "next/link";
-
-const HOBBIES = [
-  "Reading",
-  "Writing",
-  "Photography",
-  "Painting",
-  "Drawing",
-  "Music",
-  "Dancing",
-  "Cooking",
-  "Gardening",
-  "Traveling",
-  "Sports",
-  "Gaming",
-  "Chess",
-  "Hiking",
-  "Cycling",
-  "Swimming",
-  "Yoga",
-  "Meditation",
-  "Knitting",
-  "Pottery",
-];
-
+import { HOBBIES } from "./Hobbies";
+import toast from "react-hot-toast";
 export default function RegisterForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -53,13 +30,15 @@ export default function RegisterForm() {
 
     try {
       const data = await register(formData);
-
-      // Store token in localStorage
-      localStorage.setItem("findhobby-token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Redirect to dashboard
-      router.push("/dashboard");
+      toast.success(
+        "Registration Successful Please check you mail for account verification",
+        {
+          duration: 6000,
+        }
+      );
+      setTimeout(() => {
+        router.push("/login");
+      }, [5000]);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }

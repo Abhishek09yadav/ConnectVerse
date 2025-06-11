@@ -90,3 +90,24 @@ export const resetPassword = async (token, newPassword) => {
   });
   return response.data;
 };
+
+export const verifyEmail = async (token) => {
+  try {
+    const response = await axiosInstance.get(`/api/auth/verify-email/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Verification error:", error);
+  }
+};
+
+export const resendVerificationEmail = async (email) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/auth/resend-verification`,
+      { email }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};

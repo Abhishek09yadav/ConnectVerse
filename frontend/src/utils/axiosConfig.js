@@ -37,7 +37,8 @@ axiosInstance.interceptors.response.use(
       if (
         typeof window !== "undefined" &&
         !window.location.pathname.includes("/login") &&
-        !window.location.pathname.includes("/reset-password")
+        !window.location.pathname.includes("/reset-password") &&
+        !window.location.pathname.includes("/verify-email")
       ) {
         window.location.href = "/login";
       }

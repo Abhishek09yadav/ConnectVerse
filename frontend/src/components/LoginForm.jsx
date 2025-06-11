@@ -1,115 +1,172 @@
 "use client";
-import { useState } from "react";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/utils/api";
+import Link from "next/link";
+import { login, resendVerificationEmail } from "@/utils/api";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
+  const [showResendButton, setShowResendButton] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleResendVerification = async () => {
+    try {
+      setIsResending(true);
+      setResendMessage("");
+      await resendVerificationEmail(formData.email);
+      toast.success(
+        "Verification email has been resent. Please check your inbox.",
+        {
+          duration: 6000,
+        }
+      );
+      setResendMessage(
+        "Verification email has been resent. Please check your inbox."
+      );
+    } catch (error) {
+      setResendMessage(error.message || "Error resending verification email");
+      toast.error(error.message || "Error resending verification email");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setResendMessage("");
+    setShowResendButton(false);
 
     try {
       const data = await login(formData);
-
-      // Store user data and token
       localStorage.setItem("findhobby-token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Redirect to dashboard
       router.push("/dashboard");
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Failed to login. Please check your credentials."
-      );
-    } finally {
-      setLoading(false);
+      console.log("Login error:", error?.response?.data);
+      if (error?.response?.data?.isVerified === false) {
+        setError("Please verify your email before logging in.");
+        setShowResendButton(true);
+      } else {
+        setError(error?.response?.data?.message || "Login failed");
+      }
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Log In</h2>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.email}
-            onChange={handleChange}
-          />
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Sign in to your account
+          </h2>
         </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Email address"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Sign in
+            </button>
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
+          {error && (
+            <div className="text-red-600 text-sm text-center">{error}</div>
+          )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
-        >
-          {loading ? "Logging in..." : "Log In"}
-        </button>
-      </form>
+          {showResendButton && (
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                disabled={isResending}
+                className="bg-blue-600 text-white text-sm p-2 rounded-md hover:bg-blue-500 disabled:opacity-50"
+              >
+                {isResending ? "Sending..." : "Resend verification email"}
+              </button>
+            </div>
+          )}
+          {/* 
+          {resendMessage && (
+            <div className="text-sm text-center">
+              <p
+                className={
+                  resendMessage.includes("Error")
+                    ? "text-red-600"
+                    : "text-green-600"
+                }
+              >
+                {resendMessage}
+              </p>
+            </div>
+          )} */}
 
-      <div className="mt-4 text-center text-sm">
-        <p className="mb-2">
-          <Link
-            href="/forgot-password"
-            className="text-blue-600 hover:text-blue-800"
-          >
-            Forgot your password?
-          </Link>
-        </p>
-        <p>
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/registerform"
-            className="text-blue-600 hover:text-blue-800"
-          >
-            Register here
-          </Link>
-        </p>
+          <div className="flex items-center justify-between">
+            <div className="text-sm">
+              <Link
+                href="/forgot-password"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+            <div className="text-sm">
+              <Link
+                href="/registerform"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Don't have an account? Sign up
+              </Link>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
