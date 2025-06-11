@@ -20,7 +20,6 @@ import { HiOutlineExclamationCircle, HiOutlineUsers } from "react-icons/hi";
 import UserProfileModal from "./UserProfileModal";
 import toast from "react-hot-toast";
 
-
 export default function Dashboard() {
   const router = useRouter();
   const [users, setUsers] = useState([]);
@@ -28,10 +27,11 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showFriendsManager, setShowFriendsManager] = useState(false);
+
 
   useEffect(() => {
     const token = localStorage.getItem("findhobby-token");
+
     if (!token) {
       router.push("/registerform");
       return;
@@ -92,7 +92,6 @@ export default function Dashboard() {
               Find Hobby Buddies in {currentUser?.city}
             </h1>
           </div>
-     
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
