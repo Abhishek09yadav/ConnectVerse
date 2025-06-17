@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
 const ChatScreen = ({ id }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
-
+  const [socket, setSocket] = useState(null);
   useEffect(() => {
     console.log("Chat ID:", id);
+    const newSocket = io.connect(process.env.SOCKET_IO);
+    setSocket(newSocket);
+    if (id) {
+      newSocket.emit("join_room", id);
+    }
+    newSocket.on("receive_message", (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+    return () => {
+      newSocket.disconnect();
+    };
   }, [id]);
 
   const sendMessage = (e) => {
     e.preventDefault();
-    if (inputMessage.trim() === "") return;
+    if (inputMessage.trim() === "" || !socket) return;
 
-    setMessages([
-      ...messages,
-      {
-        text: inputMessage,
-        sender: "user",
-        timestamp: new Date().toLocaleTimeString(),
-      },
-    ]);
+    const messageData = {
+      userId: id,
+      text: inputMessage,
+      sender: "user",
+      timestamp: new Date().toLocaleString(),
+    };
+
+    socket.emit("send_message", messageData);
+    setMessages((prev) => [...prev, messageData]);
     setInputMessage("");
   };
 

@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUserProfile, updateUserProfile } from "@/utils/api";
-import Logout from "./logout";
 
 export default function Settings() {
   const router = useRouter();
