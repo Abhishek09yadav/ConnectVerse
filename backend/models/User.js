@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,9 +18,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
-      // unique: true,
       trim: true,
-      lowercase: true,
     },
     password: {
       type: String,
@@ -71,10 +69,6 @@ const userSchema = new mongoose.Schema(
     },
     verificationToken: String,
     verificationTokenExpires: Date,
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },
@@ -101,4 +95,4 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+export default User;

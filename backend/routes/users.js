@@ -1,10 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/User");
-const auth = require("../middleware/auth");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+import express from "express";
+import User from "../models/User.js";
+import auth from "../middleware/auth.js";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -24,6 +23,8 @@ const storage = new CloudinaryStorage({
 });
 
 const upload = multer({ storage: storage });
+
+const router = express.Router();
 
 // Get users with similar hobbies in the same city
 router.get("/similar", auth, async (req, res) => {
@@ -206,4 +207,4 @@ router.get("/friends", auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
