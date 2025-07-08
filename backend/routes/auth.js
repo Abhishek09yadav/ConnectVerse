@@ -7,6 +7,8 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+import dotenv from "dotenv";
+dotenv.config();
 // Create email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -54,7 +56,10 @@ router.post("/register", async (req, res) => {
       to: user.email,
       subject: "Verify Your Email - FindHobby",
       html: `
-        <!-- Same HTML content as before -->
+        <h2>Welcome to FindHobby!</h2>
+        <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+        <a href="${verificationUrl}">Verify Email</a>
+        <p>If you did not request this, please ignore this email.</p>
       `,
     };
 
@@ -237,7 +242,10 @@ router.post("/forgot-password", async (req, res) => {
       to: user.email,
       subject: "Password Reset Request - FindHobby",
       html: `
-        <!-- Same HTML content as before -->
+        <h2>Password Reset Request</h2>
+        <p>Click the link below to reset your password:</p>
+        <a href="${resetUrl}">Reset Password</a>
+        <p>If you did not request this, please ignore this email.</p>
       `,
     };
 
@@ -307,8 +315,11 @@ router.post("/resend-verification", async (req, res) => {
       to: user.email,
       subject: "Verify Your Email - FindHobby",
       html: `
-        <!-- Same HTML content as before -->
-      `,
+    <h2>Welcome to FindHobby!</h2>
+    <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+    <a href="${verificationUrl}">Verify Email</a>
+    <p>If you did not request this, please ignore this email.</p>
+  `,
     };
 
     await transporter.sendMail(mailOptions);
