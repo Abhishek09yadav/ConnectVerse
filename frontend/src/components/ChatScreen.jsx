@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
+const socket = io("http://localhost:5000"); // Use your backend URL
+
 const ChatScreen = ({ id }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [socket, setSocket] = useState(null);
+
   useEffect(() => {
     console.log("Chat ID:", id);
-    const newSocket = io.connect(process.env.SOCKET_IO);
-    setSocket(newSocket);
-    if (id) {
-      newSocket.emit("join_room", id);
-    }
-    newSocket.on("receive_message", (data) => {
+    socket.emit("join_room", id);
+    socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
     return () => {
-      newSocket.disconnect();
+      socket.off("receive_message");
     };
   }, [id]);
 
