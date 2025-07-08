@@ -44,9 +44,16 @@ app.use((err, req, res, next) => {
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  socket.on("chat message", (msg) => {
-    // Broadcast message to all clients
-    io.emit("chat message", msg);
+  // Join a room
+  socket.on("join_room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room ${roomId}`);
+  });
+
+  // Handle sending messages to a room
+  socket.on("send_message", (data) => {
+    // data should include: { userId, text, sender, timestamp }
+    io.to(data.userId).emit("receive_message", data);
   });
 
   socket.on("disconnect", () => {
@@ -55,9 +62,6 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-server.listen(6000, () => {
-  console.log(`socket io running on port 6000`);
+server.listen(PORT, () => {
+  console.log(`Server and Socket.IO running on port ${PORT}`);
 });

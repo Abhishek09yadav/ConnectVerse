@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000"); // Use your backend URL
+const socket = io("http://localhost:5000"); 
 
 const ChatScreen = ({ id }) => {
   const [messages, setMessages] = useState([]);
