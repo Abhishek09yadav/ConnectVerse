@@ -24,10 +24,8 @@ export default function Dashboard() {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-
 
   useEffect(() => {
     const token = localStorage.getItem("findhobby-token");
@@ -47,7 +45,7 @@ export default function Dashboard() {
       const filtered = similarUsers.filter((u) => u._id !== userData.user.id);
       setUsers(filtered);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch data");
+      toast.error(err.response?.data?.message || "Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -59,7 +57,7 @@ export default function Dashboard() {
       // Refresh the data
       fetchUserAndSimilarUsers(localStorage.getItem("findhobby-token"));
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to send friend request");
+      toast.error(err.response?.data?.message || "Failed to send friend request");
     }
   };
 
@@ -69,18 +67,6 @@ export default function Dashboard() {
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600"></div>
       </div>
     );
-  }
-
-  if (error) {
-    // return (
-    //   <div className="max-w-4xl mx-auto mt-8 p-6 bg-red-50 text-red-700 rounded-xl shadow-lg">
-    //     <div className="flex items-center space-x-3">
-    //       <HiOutlineExclamationCircle className="w-6 h-6" />
-    //       <span>{error}</span>
-    //     </div>
-    //   </div>
-    // );
-    toast.error(error);
   }
 
   return (
