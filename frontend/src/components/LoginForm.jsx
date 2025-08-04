@@ -54,6 +54,8 @@ export default function LoginForm() {
 
     try {
       const data = await login(formData);
+      
+      console.log("🚀 ~ handleSubmit ~ data:", data)
       localStorage.setItem("findhobby-token", data.token);
       router.push("/dashboard");
     } catch (error) {

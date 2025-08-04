@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "FindHobby",
+  title: "ConnectVerse",
   description: "Find your next hobby",
 };
 

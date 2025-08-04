@@ -9,6 +9,7 @@ export const socketHandler = (io) => {
     });
     socket.on("send_message", async (data) => {
       const { senderId, receiverId, content, content_type } = data;
+      console.log("message data",data)
       try {
         const newMessage  = new Message({
           sender:senderId,
@@ -16,6 +17,8 @@ export const socketHandler = (io) => {
           content,
           content_type
         })
+        console.log("newMessage",newMessage);
+        
         await newMessage.save();
         io.to(receiverId).emit("receive_message", {
           ...data,
