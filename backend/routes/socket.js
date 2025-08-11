@@ -1,4 +1,4 @@
-import Message from "../models/Message.js";
+import message from "../models/Message.js";
 
 export const socketHandler = (io) => {
   io.on("connection", (socket) => {
@@ -11,7 +11,7 @@ export const socketHandler = (io) => {
       const { senderId, receiverId, content, content_type } = data;
       console.log("message data",data)
       try {
-        const newMessage  = new Message({
+        const newMessage  = new message({
           sender:senderId,
           receiver:receiverId,
           content,
