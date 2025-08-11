@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { login, resendVerificationEmail } from "@/utils/api";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/features/authSlice";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +18,7 @@ export default function LoginForm() {
   const [resendMessage, setResendMessage] = useState("");
   const [showResendButton, setShowResendButton] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -54,8 +57,9 @@ export default function LoginForm() {
 
     try {
       const data = await login(formData);
-      
-      console.log("🚀 ~ handleSubmit ~ data:", data)
+
+      console.log("🚀 ~ handleSubmit ~ data:", data);
+      dispatch(setCredentials({ authToken: data.token, userData: data.user }));
       localStorage.setItem("findhobby-token", data.token);
       router.push("/dashboard");
     } catch (error) {
