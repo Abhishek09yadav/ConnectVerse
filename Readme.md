@@ -122,11 +122,11 @@ npm run admin:start
 
 ---
 
-## 📸 Screenshots (Optional)
+<!-- ## 📸 Screenshots (Optional)
 
 _(You can add images of dashboard, chat, and friend request UI here)_
 
----
+--- -->
 
 ## 🤝 Contributing
 
