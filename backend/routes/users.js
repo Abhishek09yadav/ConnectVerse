@@ -34,7 +34,7 @@ router.get("/similar", auth, async (req, res) => {
     // Find users in the same city
     const users = await User.find({
       city: currentUser.city,
-      _id: { $ne: currentUser._id }, // Exclude current user
+      _id: { $ne: currentUser._id },
     });
 
     // Filter users to only include those with at least one matching hobby
