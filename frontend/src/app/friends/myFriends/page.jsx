@@ -1,4 +1,4 @@
-import MyFriends from "@/components/Friends/MyFriends";
+import MyFriends from "@/components/friends/MyFriends";
 import React from "react";
 
 const page = () => {

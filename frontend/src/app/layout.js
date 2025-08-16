@@ -3,7 +3,7 @@ import "./globals.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar/Navbar";
 import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/store/ReduxProvider";
 

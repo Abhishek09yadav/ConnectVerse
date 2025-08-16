@@ -2,13 +2,13 @@
   "name": "my-monorepo",
   "version": "1.0.0",
   "scripts": {
-    "start": "npm-run-all --parallel frontend:start backend:start admin:start",
+    "start": "concurrently --names \"FE,BE,ADM\" -c \"blue.bold,cyan.bold,green.bold\" \"npm run frontend:start\" \"npm run backend:start\" \"npm run admin:start\"",
     "frontend:start": "npm run dev --prefix frontend",
     "backend:start": "npm run dev --prefix backend",
     "admin:start": "npm run dev --prefix admin",
     "bootstrap": "npm install && npm install --prefix frontend && npm install --prefix backend && npm install --prefix admin"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "concurrently": "^8.2.2"
   }
 }

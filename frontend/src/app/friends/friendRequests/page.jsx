@@ -1,4 +1,4 @@
-import FriendRequests from "@/components/Friends/FriendRequests";
+import FriendRequests from "@/components/friends/FriendRequests";
 import React from "react";
 
 const page = () => {
