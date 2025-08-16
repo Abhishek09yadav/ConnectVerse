@@ -69,16 +69,23 @@ const Navbar = () => {
     },
     {
       label: "My Friends",
-      href: "/myFriends",
+      href: "/friends/myFriends",
       icon: <Users size={18} />,
       gradient: "from-green-400 to-blue-500",
     },
     {
       label: "Friend Requests",
-      href: "/friendRequests",
-      icon: <UserPlus size={18} />,
+      href: "/friends/friendRequests",
+      icon: <Bell size={18} />,
+
       gradient: "from-pink-400 to-red-500",
       hasNotification: hasFriendRequests,
+    },
+    {
+      label: "Suggested Friends",
+      href: "/friends/suggestedFriends",
+      icon: <UserPlus size={18} />,
+      gradient: "from-yellow-400 to-orange-500",
     },
     {
       label: "Settings",
@@ -137,7 +144,7 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-2">
               {menuItems.map((item, index) => (
-                <div key={index} className="relative group">
+                <div key={index} className="relative group ">
                   <button
                     onClick={() => navigate(item.href)}
                     className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden"
@@ -145,7 +152,7 @@ const Navbar = () => {
                     <div
                       className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl`}
                     ></div>
-                    <div className="relative z-10 flex items-center space-x-2">
+                    <div className="relative z-10 flex items-center space-x-2 cursor-pointer">
                       {item.icon}
                       <span className="text-sm font-medium">{item.label}</span>
                       {item.hasNotification && <NotificationDot show={true} />}
@@ -155,7 +162,7 @@ const Navbar = () => {
               ))}
               {/* Logout */}
               <div className="relative group">
-                <button className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden">
+                <button className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                   <div className="relative z-10">
                     <Logout />
