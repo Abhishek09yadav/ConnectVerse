@@ -40,6 +40,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    streakCount:Number,
+    lastActionDate:Date,
+    maxStreak: Number,
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,
