@@ -1,18 +1,18 @@
-import express from "express";
+import express, { json } from "express";
 import User from "../models/User.js";
 import auth from "../middleware/auth.js";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
-// Configure Cloudinary
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure multer storage for Cloudinary
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -69,8 +69,8 @@ router.put(
   async (req, res) => {
     try {
       const { name, email, phone, city, hobbies } = req.body;
+      // console.log("🚀 ~ req.body:", req.body)
       const user = await User.findById(req.user.userId);
-
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -82,8 +82,9 @@ router.put(
       user.city = city || user.city;
 
       // Update hobbies if provided
-      if (hobbies) {
-        user.hobbies = hobbies.split(",").map((hobby) => hobby.trim());
+      const parsedHobbies = JSON.parse(hobbies)
+      if (parsedHobbies) {
+        user.hobbies = parsedHobbies.map((hobby) => hobby.trim());
       }
 
       // Update profile image if uploaded
@@ -99,6 +100,7 @@ router.put(
 
       res.json(userData);
     } catch (error) {
+      console.log("error in updating profile" , error)
       res.status(500).json({ message: "Server error", error: error.message });
     }
   }

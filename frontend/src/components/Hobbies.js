@@ -20,3 +20,4 @@ export const HOBBIES = [
   "Knitting",
   "Pottery",
 ];
+export default HOBBIES;

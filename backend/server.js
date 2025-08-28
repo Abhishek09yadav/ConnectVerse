@@ -12,8 +12,7 @@ const app = express();
 const server = http.createServer(app);
 dotenv.config();
 const io = new Server(server, {
-  cors: { origin: process.env.FRONTEND_URL
-   },
+  cors: { origin: process.env.FRONTEND_URL },
 });
 
 socketHandler(io);
@@ -39,9 +38,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong!" });
 });
 
-
-const PORT = process.env.PORT || 5500;
+const PORT = 5500; //process.env.PORT || 
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server and Socket.IO running on port ${PORT}`);
 });
-

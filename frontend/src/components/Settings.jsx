@@ -2,29 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getUserProfile, updateUserProfile } from "@/utils/api";
-
-const AVAILABLE_HOBBIES = [
-  "Reading",
-  "Writing",
-  "Photography",
-  "Painting",
-  "Drawing",
-  "Music",
-  "Dancing",
-  "Cooking",
-  "Gardening",
-  "Traveling",
-  "Sports",
-  "Gaming",
-  "Chess",
-  "Hiking",
-  "Cycling",
-  "Swimming",
-  "Yoga",
-  "Meditation",
-  "Knitting",
-  "Pottery",
-];
+import AVAILABLE_HOBBIES from './Hobbies'
 
 export default function Settings() {
   const router = useRouter();
