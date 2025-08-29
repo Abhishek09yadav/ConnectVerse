@@ -62,14 +62,19 @@ router.get("/profile", auth, async (req, res) => {
 });
 
 // Update user profile
+// Change the route definition:
 router.put(
   "/profile",
   auth,
   upload.single("profileImage"),
   async (req, res) => {
     try {
-      const { name, email, phone, city, hobbies } = req.body;
-      // console.log("🚀 ~ req.body:", req.body)
+      const { name, email, phone, city } = req.body;
+      // hobbies will be in req.body.hobbies as array
+      let hobbies = Array.isArray(req.body.hobbies) 
+        ? req.body.hobbies 
+        : req.body.hobbies ? [req.body.hobbies] : [];
+
       const user = await User.findById(req.user.userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -100,7 +105,7 @@ router.put(
 
       res.json(userData);
     } catch (error) {
-      console.log("error in updating profile" , error)
+      console.log("error in updating profile", error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   }

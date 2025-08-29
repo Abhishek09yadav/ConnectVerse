@@ -13,8 +13,7 @@ const PORT = process.env.PORT || 5500;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: process.env.FRONTEND_URL
-   },
+  cors: { origin: process.env.FRONTEND_URL },
 });
 
 socketHandler(io);
@@ -22,7 +21,7 @@ socketHandler(io);
 app.use(cors());
 app.use(express.json());
 
-// MongoDB
+
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -31,7 +30,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Routes
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
@@ -43,4 +42,3 @@ app.use((err, req, res, next) => {
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server and Socket.IO running on port ${PORT}`);
 });
-

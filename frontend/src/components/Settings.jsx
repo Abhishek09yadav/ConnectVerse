@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getUserProfile, updateUserProfile } from "@/utils/api";
-import AVAILABLE_HOBBIES from './Hobbies'
+import AVAILABLE_HOBBIES from "./Hobbies";
 
 export default function Settings() {
   const router = useRouter();
@@ -20,7 +20,6 @@ export default function Settings() {
   });
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [removePhoto, setRemovePhoto] = useState(false);
   const [isHobbyDropdownOpen, setIsHobbyDropdownOpen] = useState(false);
 
   const dropdownRef = useRef(null);
@@ -110,17 +109,10 @@ export default function Settings() {
     const file = e.target.files[0];
     if (file) {
       setProfileImage(file);
-      setRemovePhoto(false);
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleRemovePhoto = () => {
-    setProfileImage(null);
-    setImagePreview("");
-    setRemovePhoto(true);
   };
 
   const handleSubmit = async (e) => {
@@ -131,14 +123,12 @@ export default function Settings() {
 
     try {
       const formDataToSend = new FormData();
-      if (removePhoto) {
-        formDataToSend.append("removePhoto", "true");
-      } else if (profileImage) {
+      if (profileImage) {
         formDataToSend.append("profileImage", profileImage);
       }
+
       Object.keys(formData).forEach((key) => {
         if (key === "hobbies") {
-          // Send the hobbies as a JSON string
           formDataToSend.append(key, JSON.stringify(formData[key] || []));
         } else {
           formDataToSend.append(key, formData[key]);
@@ -163,7 +153,6 @@ export default function Settings() {
     );
   }
 
-  // Filter the available hobbies to show only those not yet selected
   const availableHobbiesForSelection = AVAILABLE_HOBBIES.filter(
     (hobby) => !formData.hobbies.includes(hobby)
   );
@@ -201,33 +190,6 @@ export default function Settings() {
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 transition-colors duration-300">
                   <div className="text-center font-semibold">Upload Photo</div>
-                </div>
-              )}
-              {(imagePreview || user?.profileImage) && (
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemovePhoto();
-                    }}
-                    className="p-2 bg-red-600 bg-opacity-75 text-white rounded-full text-xs shadow hover:bg-opacity-100 transition-colors"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
                 </div>
               )}
             </div>
