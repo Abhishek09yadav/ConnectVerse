@@ -7,10 +7,11 @@ import { Server } from "socket.io";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import { socketHandler } from "./routes/socket.js";
+
+dotenv.config();
 const PORT = process.env.PORT || 5500;
 const app = express();
 const server = http.createServer(app);
-dotenv.config();
 const io = new Server(server, {
   cors: { origin: process.env.FRONTEND_URL
    },
