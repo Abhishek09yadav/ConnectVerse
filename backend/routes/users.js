@@ -69,11 +69,7 @@ router.put(
   upload.single("profileImage"),
   async (req, res) => {
     try {
-      const { name, email, phone, city } = req.body;
-      // hobbies will be in req.body.hobbies as array
-      let hobbies = Array.isArray(req.body.hobbies) 
-        ? req.body.hobbies 
-        : req.body.hobbies ? [req.body.hobbies] : [];
+      const { name, email, phone, city, hobbies } = req.body;
 
       const user = await User.findById(req.user.userId);
       if (!user) {
@@ -86,10 +82,13 @@ router.put(
       user.phone = phone || user.phone;
       user.city = city || user.city;
 
-      // Update hobbies if provided
-      const parsedHobbies = JSON.parse(hobbies)
-      if (parsedHobbies) {
-        user.hobbies = parsedHobbies.map((hobby) => hobby.trim());
+    
+      if (hobbies) {
+        if (typeof hobbies === 'string') {
+          user.hobbies = JSON.parse(hobbies);
+        } else {
+          user.hobbies = hobbies;
+        }
       }
 
       // Update profile image if uploaded
@@ -106,7 +105,7 @@ router.put(
       res.json(userData);
     } catch (error) {
       console.log("error in updating profile", error);
-      res.status(500).json({ message: "Server error", error: error.message });
+      res.status(500).json({ message: "Something went wrong!", error: error.message, stack: error.stack });
     }
   }
 );

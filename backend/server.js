@@ -1,14 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import http from "http";
 import { Server } from "socket.io";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import { socketHandler } from "./routes/socket.js";
-
-dotenv.config();
 const PORT = process.env.PORT || 5500;
 const app = express();
 const server = http.createServer(app);
@@ -35,8 +34,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+  console.error("Global error handler:", err);
+  res.status(500).json({ message: err.message || "Something went wrong!", error: err });
 });
 
 server.listen(PORT, "0.0.0.0", () => {
