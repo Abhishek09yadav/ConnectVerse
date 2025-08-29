@@ -57,13 +57,21 @@ export default function Settings() {
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const toggleHobby = (hobby) =>
-    setFormData((prev) => ({
-      ...prev,
-      hobbies: prev.hobbies.includes(hobby)
-        ? prev.hobbies.filter((h) => h !== hobby)
-        : [...prev.hobbies, hobby],
-    }));
+  const toggleHobby = (hobby) => {
+  const  isSelected = formData.hobbies.includes(hobby);
+    if (isSelected) {
+      setFormData((prev) => ({
+        ...prev,
+        hobbies: prev.hobbies.filter((h) => h !== hobby),
+      }));
+    } else if (formData.hobbies.length >= 5) {
+      toast.error("You can select up to 5 hobbies.");
+      return;
+    }
+    else{
+      setFormData(prev => ({...prev,hobbies:[...prev.hobbies,hobby]}))
+    }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
