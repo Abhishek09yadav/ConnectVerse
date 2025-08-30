@@ -58,7 +58,7 @@ export default function Settings() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const toggleHobby = (hobby) => {
-  const  isSelected = formData.hobbies.includes(hobby);
+    const isSelected = formData.hobbies.includes(hobby);
     if (isSelected) {
       setFormData((prev) => ({
         ...prev,
@@ -67,9 +67,8 @@ export default function Settings() {
     } else if (formData.hobbies.length >= 5) {
       toast.error("You can select up to 5 hobbies.");
       return;
-    }
-    else{
-      setFormData(prev => ({...prev,hobbies:[...prev.hobbies,hobby]}))
+    } else {
+      setFormData((prev) => ({ ...prev, hobbies: [...prev.hobbies, hobby] }));
     }
   };
 
@@ -166,12 +165,16 @@ export default function Settings() {
                       ? "email"
                       : field === "phone"
                       ? "tel"
+                      : field === "email"
+                      ? "email"
                       : "text"
                   }
                   name={field}
+                  disabled={field === "email"}
+                  required
                   value={formData[field]}
                   onChange={handleChange}
-                  className="w-full border rounded-lg py-2 px-4 focus:ring-2 focus:ring-blue-500 hover:border-blue-400"
+                  className={`w-full border rounded-lg py-2 px-4 focus:ring-2 focus:ring-blue-500 hover:border-blue-400 ${field === "email"?"cursor-not-allowed bg-gray-200":""}`}
                 />
               </div>
             ))}
