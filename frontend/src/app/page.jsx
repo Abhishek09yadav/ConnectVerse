@@ -17,7 +17,7 @@ export default function Home() {
     if (user) {
       router.push("/dashboard");
     } else {
-      router.push("/login"); // or "/login" if you have that route
+      router.push("/login");
     }
   }, [router]);
 
