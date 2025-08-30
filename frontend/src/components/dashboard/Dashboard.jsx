@@ -48,12 +48,36 @@ const Dashboard = () => {
                 <Pencil className="w-5 h-5" />
                 <span className="text-sm font-medium">Article</span>
               </button>
-              <button className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium cursor-pointer" >
+              <button className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium cursor-pointer">
                 Post
               </button>
             </div>
           </div>
         </div>
+
+        {/* matching section */}
+        <div className="bg-white rounded-xl shadow-sm p-6 text-center">
+          <div className="mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center ">
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <div className="w-4 h-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-full" />
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Matching based on your personality
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Find new connections that match your unique traits.
+            </p>
+            <button className="w-full py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium">
+              Start Matching
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* right section */}
+      <div className="space-y-6">
+        
       </div>
     </div>
   );
