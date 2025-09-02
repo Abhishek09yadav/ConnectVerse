@@ -10,6 +10,9 @@ import {
   Cake,
   Puzzle,
 } from "lucide-react";
+import DailyNews from "./DailyNews";
+import UpcomingEvent from "./UpcomingEvent";
+import Post from "./Post";
 const groups = [
   {
     id: 1,
@@ -40,7 +43,6 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-3 ">
-        {" "}
         {/* left Column */}
         <div className="lg:col-span-2 space-y-6">
           <div className="relative">
@@ -51,37 +53,7 @@ const Dashboard = () => {
             />
           </div>
           {/* post creation */}
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 ">
-              What's on your mind?
-            </h3>
-            <div className="mb-4">
-              <textarea
-                placeholder="Share a post, a photo, or an article..."
-                rows={4}
-                className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-transparent"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap space-x-4">
-                <button className="flex items-center cursor-pointer space-x-2 px-3 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors">
-                  <ImageIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium">Photo</span>
-                </button>
-                <button className="flex items-center cursor-pointer space-x-2 px-3 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors">
-                  <Layers className="w-5 h-5" />
-                  <span className="text-sm font-medium">Story</span>
-                </button>
-                <button className="flex items-center cursor-pointer space-x-2 px-3 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors">
-                  <Pencil className="w-5 h-5" />
-                  <span className="text-sm font-medium">Article</span>
-                </button>
-                <button className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium cursor-pointer">
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
+          <Post />
 
           {/* matching section */}
           <div className="bg-white rounded-xl shadow-sm p-6 text-center">
@@ -102,6 +74,8 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+          {/* daily news*/}
+          <DailyNews />
         </div>
         {/* right section */}
         <div className="space-y-6">
@@ -138,12 +112,17 @@ const Dashboard = () => {
                     <div className="font-medium text-gray-900">
                       {value?.name}
                     </div>
-                    <div className="text-sm text-gray-500 ">{value?.members} members</div>
+                    <div className="text-sm text-gray-500 ">
+                      {value?.members} members
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+          {/* upcoming event*/}
+
+          <UpcomingEvent />
         </div>
       </div>
     </div>
