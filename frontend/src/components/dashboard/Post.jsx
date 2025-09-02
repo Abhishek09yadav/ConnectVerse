@@ -1,15 +1,5 @@
-import React from 'react'
-import {
-  Search,
-  ImageIcon,
-  Layers,
-  Pencil,
-  Flame,
-  BookOpen,
-  Tag,
-  Cake,
-  Puzzle,
-} from "lucide-react";
+import React from "react";
+import { ImageIcon, Layers, Pencil } from "lucide-react";
 const Post = () => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
@@ -44,6 +34,6 @@ const Post = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Post
+export default Post;
