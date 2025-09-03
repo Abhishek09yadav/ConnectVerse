@@ -24,6 +24,7 @@ const Dashboard = () => {
           {/* daily news*/}
           <DailyNews />
         </div>
+
         {/* right section */}
         <div className="space-y-6">
           {/* daily streak */}
@@ -31,7 +32,6 @@ const Dashboard = () => {
           {/* local groups */}
           <LocalGroups />
           {/* upcoming event*/}
-
           <UpcomingEvent />
         </div>
       </div>

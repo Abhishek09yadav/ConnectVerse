@@ -1,5 +1,6 @@
+import axios from "axios";
 import axiosInstance from "./axiosConfig";
-
+const NEWS_API_KEY = process.env.NEXT_PUBLIC_NEWS_API_KEY;
 // Auth API calls
 export const login = async (formData) => {
   const response = await axiosInstance.post("/api/auth/login", formData);
@@ -102,12 +103,23 @@ export const verifyEmail = async (token) => {
 
 export const resendVerificationEmail = async (email) => {
   try {
-    const response = await axiosInstance.post(
-      `/api/auth/resend-verification`,
-      { email }
-    );
+    const response = await axiosInstance.post(`/api/auth/resend-verification`, {
+      email,
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
+  }
+};
+
+// news api
+export const dailyNews = async () => {
+  try {
+    const response = await axios.get(
+      `https://newsdata.io/api/1/latest?apikey=${NEWS_API_KEY}&country=in&prioritydomain=top`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };
