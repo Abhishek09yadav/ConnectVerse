@@ -2,10 +2,11 @@
 import { dailyNews } from "@/utils/api";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegNewspaper } from "react-icons/fa6";
+import ComponentLoader from "../loader/ComponentLoader";
+
 
 const DailyNews = () => {
   const [newsData, setNewsData] = useState([]);
@@ -13,7 +14,8 @@ const DailyNews = () => {
   useEffect(() => {
     fetchDailyNews();
   }, []);
-  const router = useRouter();
+  const nodesc =
+    "No detailed description available for this article. Click 'Read more' to learn about the latest developments.";
   async function fetchDailyNews() {
     try {
       setLoading(true);
@@ -28,7 +30,7 @@ const DailyNews = () => {
     }
   }
   if (loading || !newsData) {
-    return <>Loading News...</>;
+    return <ComponentLoader LoadingText={'Loading Daily News...'}/>;
   }
   return (
     <div className="bg-white rounded-lg p-4  text-2xl font-semibold ">
@@ -41,7 +43,7 @@ const DailyNews = () => {
           newsData.map((news, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-blue-300 h-80 w-full  transtiion duration-300 hover:scale-105 cursor-pointer "
+              className="flex flex-col bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-blue-300 h-80 w-full  transtiion duration-300 hover:scale-105  "
             >
               <Image
                 className="w-full object-cover h-1/3 "
@@ -50,19 +52,21 @@ const DailyNews = () => {
                 alt="news img"
                 src={news?.image_url || "/img/newspaper.png"}
               />
-              <div className="p-4">
-                {" "}
+              <div className="p-4 flex flex-col flex-grow">
                 <div className="">
                   <h2 className=" font-semibold text-lg mb-1 line-clamp-2 ">
                     {news.title}
                   </h2>
                 </div>
                 <p className=" text-sm text-gray-600 line-clamp-4">
-                  {news?.description}
+                  {news?.description || nodesc}
                 </p>
-              </div>{" "}
-              <div className="flex justify-end">
-                <Link href={news.link} className="text-blue-400 text-sm">
+              </div>
+              <div className="flex justify-end p-4 ">
+                <Link
+                  href={news.link}
+                  className="text-blue-400 text-sm cursor-pointer"
+                >
                   Read More
                 </Link>
               </div>
