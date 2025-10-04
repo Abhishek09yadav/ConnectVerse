@@ -7,6 +7,7 @@ import http from "http";
 import { Server } from "socket.io";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
+import streakRoutes from "./routes/streakRoutes.js";
 import { socketHandler } from "./routes/socket.js";
 const PORT = process.env.PORT || 5500;
 const app = express();
@@ -32,6 +33,7 @@ mongoose
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/streak", streakRoutes);
 
 app.use((err, req, res, next) => {
   console.error("Global error handler:", err);
