@@ -71,6 +71,7 @@ const DailyNews = () => {
                 </Link>
               </div>
             </div>
+            
           ))}
       </div>
     </div>

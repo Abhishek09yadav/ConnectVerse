@@ -123,3 +123,14 @@ export const dailyNews = async () => {
     throw error;
   }
 };
+
+// Streak API calls
+export const updateStreak = async () => {
+  const response = await axiosInstance.post("/api/streak/update");
+  return response.data;
+};
+
+export const getStreak = async () => {
+  const response = await axiosInstance.get("/api/streak");
+  return response.data;
+};
