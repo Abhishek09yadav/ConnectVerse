@@ -42,7 +42,7 @@ const DailyStreak = () => {
             <div className="flex items-center space-x-2 mb-2">
               <Flame className="w-8 h-8 text-orange-500" />
               <span className="text-3xl font-bold text-gray-900">
-                {streakData.streakCount}
+                {streakData?.streakCount}
               </span>
             </div>
             <p className="text-sm text-gray-600 font-medium">Daily Streak</p>
@@ -51,7 +51,7 @@ const DailyStreak = () => {
             <div className="flex items-center space-x-2 mb-2">
               <Trophy className="w-8 h-8 text-yellow-500" />
               <span className="text-3xl font-bold text-gray-900">
-                {streakData.maxStreak}
+                {streakData?.maxStreak}
               </span>
             </div>
             <p className="text-sm text-gray-600 font-medium">Best Streak</p>
