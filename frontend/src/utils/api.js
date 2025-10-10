@@ -131,6 +131,6 @@ export const updateStreak = async () => {
 };
 
 export const getStreak = async () => {
-  const response = await axiosInstance.get("/api/streak");
+  const response = await axiosInstance.get("/api/streak/getstreak");
   return response.data;
 };

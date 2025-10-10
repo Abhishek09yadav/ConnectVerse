@@ -2,7 +2,9 @@ import User from "../models/User.js";
 
 export const updateStreak = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
+    // console.log("userId in update controller",user);
+    
     if (!user) return res.status(404).json({ message: "User not found" });
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -20,13 +22,13 @@ export const updateStreak = async (req, res) => {
           maxStreak: user.maxStreak,
         });
       }
+      user.lastActionDate = today;
       if (diffDays === 1) {
         user.streakCount++;
         user.maxStreak = Math.max(user.streakCount, user.maxStreak);
       } else {
         user.streakCount = 1;
         user.maxStreak = Math.max(user.streakCount , user.maxStreak || 0 )
-        user.lastActionDate = today;
       }
     }
     await user.save();
@@ -37,12 +39,12 @@ export const updateStreak = async (req, res) => {
 };
 export const getStreak = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select(
+    const user = await User.findById(req.user.userId).select(
       "streakCount maxStreak lastActionDate"
     );
     res.json({
-      streakCount: user.streakCount || 0,
-      maxStreak: user.maxStreak || 0,
+      streakCount: user?.streakCount || 0,
+      maxStreak: user?.maxStreak || 0,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

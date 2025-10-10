@@ -6,6 +6,6 @@ import auth from '../middleware/auth.js';
 const router = express.Router();
 
 router.post('/update', auth, updateStreak);
-router.get('/', auth, getStreak);
+router.get('/getstreak', auth, getStreak);
 
 export default router;

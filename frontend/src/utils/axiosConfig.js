@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Create axios instance with custom config
+// axios instance 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {

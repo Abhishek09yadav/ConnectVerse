@@ -18,6 +18,7 @@ const DailyStreak = () => {
       setLoading(true);
       await updateStreak();
       const data = await getStreak();
+      console.log("streak data",data)
       setStreakData(data);
     } catch (error) {
       console.error("Error fetching streak:", error);

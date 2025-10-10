@@ -15,6 +15,7 @@ export default (req, res, next) => {
       process.env.JWT_SECRET || "your-secret-key"
     );
     req.user = verified;
+    // console.log("user data in middleware",req.user);
     next();
   } catch (error) {
     res
