@@ -16,20 +16,20 @@ export const updateStreak = async (req, res) => {
       const lastDate = new Date(user.lastActionDate);
       lastDate.setHours(0, 0, 0, 0);
       const diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+                 
       if (diffDays === 0) {
         return res.json({
           streakCount: user.streakCount,
           maxStreak: user.maxStreak,
         });
-      }
-      user.lastActionDate = today;
-      if (diffDays === 1) {
+      } else if (diffDays === 1) {
         user.streakCount++;
         user.maxStreak = Math.max(user.streakCount, user.maxStreak);
       } else {
         user.streakCount = 1;
-        user.maxStreak = Math.max(user.streakCount , user.maxStreak || 0 )
       }
+      
+      user.lastActionDate = today;
     }
     await user.save();
     res.json({ streakCount: user.streakCount, maxStreak: user.maxStreak });
