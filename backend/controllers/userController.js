@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { v2 as cloudinary } from "cloudinary";
 
 // Get users with similar hobbies in the same city
 export const getSimilarUsers = async (req, res) => {
@@ -57,7 +58,20 @@ export const updateUserProfile = async (req, res) => {
     }
 
     if (req.file) {
-      user.profileImage = req.file.path;
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "findhobby/profiles",
+            transformation: [{ width: 500, height: 500, crop: "limit" }],
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(req.file.buffer);
+      });
+      user.profileImage = uploadResult.secure_url;
     }
 
     await user.save();

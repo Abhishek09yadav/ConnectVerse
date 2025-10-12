@@ -2,7 +2,6 @@ import express from "express";
 import auth from "../middleware/auth.js";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 import {
   getSimilarUsers,
   getUserProfile,
@@ -20,16 +19,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "findhobby/profiles",
-    allowed_formats: ["jpg", "jpeg", "png"],
-    transformation: [{ width: 500, height: 500, crop: "limit" }],
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const router = express.Router();
